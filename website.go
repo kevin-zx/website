@@ -18,8 +18,16 @@ func GetWebSiteByHost(host string) (*extract.Website, error) {
 		}
 		t := extract.TestPageType(u, lt, "")
 		if t != "" && t != extract.HomePageTypes {
+			for _, p := range ws.Pages {
+				if u == p.PageUrl {
+					continue
+				}
+			}
 			page, err := extract.ParserPageUrl(hostUrl, "")
 			if err != nil {
+				continue
+			}
+			if page.PageUrl == "" {
 				continue
 			}
 			ws.Pages = append(ws.Pages, *page)
