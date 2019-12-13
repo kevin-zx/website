@@ -27,6 +27,7 @@ func GetWebSiteByHost(host string) (*extract.Website, error) {
 			if err != nil {
 				continue
 			}
+			page.Type = t
 			if page.PageUrl == "" {
 				continue
 			}
