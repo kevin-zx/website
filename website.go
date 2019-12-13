@@ -23,7 +23,7 @@ func GetWebSiteByHost(host string) (*extract.Website, error) {
 					continue
 				}
 			}
-			page, err := extract.ParserPageUrl(hostUrl, "")
+			page, err := extract.ParserPageUrl(u, "")
 			if err != nil {
 				continue
 			}

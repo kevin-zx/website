@@ -7,7 +7,7 @@ import (
 )
 
 func TestGetWebSiteByHost(t *testing.T) {
-	ws, err := GetWebSiteByHost("www.niuweixin.cn")
+	ws, err := GetWebSiteByHost("www.020jinyou.com")
 	if err != nil {
 		log.Fatalf("%v\n", err)
 	}
