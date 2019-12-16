@@ -64,8 +64,8 @@ func ParserPageUrl(pageUrl string, pageLinkText string) (wp *WebPage, err error)
 	wp.Title, wp.Description, wp.Keywords = getTDK(doc)
 	wp.Type = TestPageType(pageUrl, pageLinkText, wp.Title)
 	splitText, fullText := getPageContent(doc.Find("html"))
-	wp.SplitText = splitText
-	wp.Text = fullText
+	wp.SplitText = append(splitText, clearHoleText(wp.Description))
+	wp.Text = fullText + clearHoleText(wp.Description)
 	htmlText := doc.Find("html").Text()
 	phones := regexInfopaser.MatchPhone(htmlText)
 	for _, p := range phones {
@@ -86,6 +86,7 @@ func ParserPageUrl(pageUrl string, pageLinkText string) (wp *WebPage, err error)
 		code, area := exportAreaCode(tel)
 		if code == "" {
 			fmt.Println(tel)
+			continue
 		}
 		wp.TelPhones = append(wp.TelPhones, TelPhoneNum{
 			TelNum:   tel,
@@ -144,6 +145,8 @@ func clear(text string) []string {
 	text = strings.Replace(text, " ", "", -1)
 	//text = strings.Replace(text,"\n","",-1)
 	//text = strings.Replace(text," ","",-1)
+	text = strings.Replace(text, "（", "(", -1)
+	text = strings.Replace(text, "）", ")", -1)
 	texts := strings.Split(text, " ")
 	var resultTexts []string
 	for _, v := range texts {
@@ -186,11 +189,11 @@ func splitKeywords(keywordsStr string) []string {
 func getPagePCHtml(pageUrl string) (string, error) {
 	wec, err := http_util.GetWebConFromUrlWithAllArgs(pageUrl,
 		map[string]string{"User-Agent": "Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)"},
-		"GET", nil, time.Minute)
+		"GET", nil, time.Second*20)
 	if err != nil {
 		wec, err = http_util.GetWebConFromUrlWithAllArgs(pageUrl,
 			map[string]string{"User-Agent": "Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)"},
-			"GET", nil, time.Minute)
+			"GET", nil, time.Second*20)
 	}
 	if err != nil {
 		return "", err

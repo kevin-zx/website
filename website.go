@@ -39,10 +39,11 @@ func GetWebSiteByHost(host string) (*extract.Website, error) {
 			}
 		}
 	}
-
+	allSplitText = append(allSplitText, homePage.SplitText...)
+	wholeText += homePage.Text
+	ws.Pages = append(ws.Pages, *homePage)
 	cm := extract.TakeCompanyNames(allSplitText, wholeText, homePage.Title)
 	ws.CompanyName = getTopCompany(cm)
-	ws.Pages = append(ws.Pages, *homePage)
 	ws.SiteUrl = hostUrl
 	return &ws, nil
 }
