@@ -1,6 +1,8 @@
 package websitetool
 
-import "github.com/kevin-zx/websitetool/extract"
+import (
+	"github.com/kevin-zx/websitetool/extract"
+)
 
 func GetWebSiteByHost(host string) (*extract.Website, error) {
 	hostUrl := "http://" + host
