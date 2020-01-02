@@ -2,6 +2,7 @@ package websitetool
 
 import (
 	"fmt"
+	"github.com/kevin-zx/websitetool/companynametool"
 	"github.com/kevin-zx/websitetool/extract"
 	"reflect"
 	"testing"
@@ -100,12 +101,14 @@ func TestGetWebSiteByCompanyName(t *testing.T) {
 	}
 	for _, cn := range cns {
 		wss, err := GetWebSiteByCompanyName(cn)
+		cnn := companynametool.ClearCompanyName(cn)
 		if err != nil {
 			panic(err)
 		}
 		for _, ws := range wss {
+
 			//if strings.Contains(ws.Pages[0].Text, cn) {
-			fmt.Printf("%s------------------------%s------------------------%s-------------------------%s\n", cn, ws.SiteUrl, ws.CompanyName, ws.Pages[0].Title)
+			fmt.Printf("%s------------------------%s------------------------%s------------------------%s------------------------%s-------------------------%s\n", cn, cnn, ws.CompanyName, companynametool.ClearCompanyName(ws.CompanyName), ws.SiteUrl, ws.Pages[0].Title)
 			//}
 		}
 	}
