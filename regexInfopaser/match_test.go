@@ -297,15 +297,19 @@ func TestMatch(t *testing.T) {
 工商注册号	13912649654	组织机构代码	MA5FQFB6-1
 登记机关	深圳市市场监督管理局13912649654	成立日期	2019-08-05
 企业类型	有限责任公司(自然人独资)	营业期限	2019-08-05 至 无固定期限
-行政区划	广东省	审核/年检日期	2019-08-05
-注册地址	深圳市福田区香蜜湖街道香岭社区紫竹六道78号竹盛花园15栋102查看地图
+行政区划	广东省	审核/年检日期	2019-08-05 
+注册地址	深圳市福田区香蜜湖街道香岭社区紫158-5022-6710 竹六道78号竹盛花园15栋102查看地图
 经营范围	一般经营项目是：婚庆咨询服务；婚礼策划；婚庆礼仪服务；婚纱摄影服务；会展会务服务；文化艺术交流活动策划；企业形象策划；市场营销策划；商务信息咨询...展开`},
-			want: []string{"13912649654"},
+			want: []string{"13912649654", "15850226710"},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			for _, p := range MatchPhone(tt.args.text) {
+				println(p)
+			}
 			if got := MatchPhone(tt.args.text); !reflect.DeepEqual(got, tt.want) {
+
 				t.Errorf("MatchPhone() = %v, want %v", got, tt.want)
 			}
 		})

@@ -66,8 +66,8 @@ func ParserPageUrl(pageUrl string, pageLinkText string) (wp *WebPage, err error)
 	splitText, fullText := getPageContent(doc.Find("html"))
 	wp.SplitText = append(splitText, clearHoleText(wp.Description))
 	wp.Text = fullText + clearHoleText(wp.Description)
-	htmlText := doc.Find("html").Text()
-	phones := regexInfopaser.MatchPhone(htmlText)
+	//htmlText := doc.Find("html").Text()
+	phones := regexInfopaser.MatchPhone(strings.Join(wp.SplitText, ","))
 	for _, p := range phones {
 
 		pr, err := phonedata.Find(p)
@@ -81,7 +81,7 @@ func ParserPageUrl(pageUrl string, pageLinkText string) (wp *WebPage, err error)
 			ZipCode:                   pr.ZipCode,
 		})
 	}
-	tels := regexInfopaser.MatchTelephone(htmlText)
+	tels := regexInfopaser.MatchTelephone(strings.Join(wp.SplitText, ","))
 	for _, tel := range tels {
 		code, area := exportAreaCode(tel)
 		if code == "" {
@@ -103,6 +103,7 @@ func getPageContent(htmlSelect *goquery.Selection) (splitText []string, wholeTex
 	var spiltText []string
 	spiltText = append(spiltText, TagText(htmlSelect, "span")...)
 	spiltText = append(spiltText, TagText(htmlSelect, "a")...)
+	spiltText = append(spiltText, TagText(htmlSelect, "b")...)
 	spiltText = append(spiltText, TagText(htmlSelect, "em")...)
 	spiltText = append(spiltText, TagText(htmlSelect, "p")...)
 	spiltText = append(spiltText, TagText(htmlSelect, "h1")...)
