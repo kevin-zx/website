@@ -26,20 +26,22 @@ var nums = []string{"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"}
 var punctuations = []string{"©", "·", "=", "-", "，", "。", "、", "；", "’", "【", "】", "、", "`", "！", "@", "#", "￥", "%", "…", "…", "&", "×", "—", "—", "《", "》", "？", "：", "”", "“", "{", "}", "‘", "|", "～", "+", ",", ".", "/", ";", "'", "[", "]", "\\", "`", "!", "@", "#", "$", "%", "^", "&", "*", "_", "+", "<", ">", "?", ":", "\"", "{", "}", "~"}
 var emptybrackets = []string{"((", "（（", "()", "（）"}
 
-func ParserPageUrl(host string, pageLinkText string) (wp *WebPage, err error) {
+func ParserPageUrl(pageURL string,isHomePage bool, pageLinkText string) (wp *WebPage, err error) {
 
-	hostURL := "http://"+host
 	wp = &WebPage{}
-	wp.PageUrl = host
-	html, err := getPagePCHtml(hostURL)
+	html, err := getPagePCHtml(pageURL)
 	if err != nil {
-		hostURL := "https://"+host
-		html, err = getPagePCHtml(hostURL)
+		if isHomePage {
+			pageURL := strings.ReplaceAll(pageURL,"http","https")
+			html, err = getPagePCHtml(pageURL)
+		}
+
 		if err != nil {
 			return nil, err
 		}
 	}
-	pu, err := url.Parse(hostURL)
+	wp.PageUrl = pageURL
+	pu, err := url.Parse(pageURL)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +70,7 @@ func ParserPageUrl(host string, pageLinkText string) (wp *WebPage, err error) {
 	})
 	wp.AllLinks = links
 	wp.Title, wp.Description, wp.Keywords = getTDK(doc)
-	wp.Type = TestPageType(host, pageLinkText, wp.Title)
+	wp.Type = TestPageType(pageURL, pageLinkText, wp.Title)
 	splitText, fullText := getPageContent(doc.Find("html"))
 	wp.SplitText = append(splitText, clearHoleText(wp.Description))
 	wp.Text = fullText + clearHoleText(wp.Description)
