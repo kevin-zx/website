@@ -26,13 +26,13 @@ var nums = []string{"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"}
 var punctuations = []string{"©", "·", "=", "-", "，", "。", "、", "；", "’", "【", "】", "、", "`", "！", "@", "#", "￥", "%", "…", "…", "&", "×", "—", "—", "《", "》", "？", "：", "”", "“", "{", "}", "‘", "|", "～", "+", ",", ".", "/", ";", "'", "[", "]", "\\", "`", "!", "@", "#", "$", "%", "^", "&", "*", "_", "+", "<", ">", "?", ":", "\"", "{", "}", "~"}
 var emptybrackets = []string{"((", "（（", "()", "（）"}
 
-func ParserPageUrl(pageURL string,isHomePage bool, pageLinkText string) (wp *WebPage, err error) {
+func ParserPageUrl(pageURL string, isHomePage bool, pageLinkText string) (wp *WebPage, err error) {
 
 	wp = &WebPage{}
 	html, err := getPagePCHtml(pageURL)
 	if err != nil {
 		if isHomePage {
-			pageURL := strings.ReplaceAll(pageURL,"http","https")
+			pageURL := strings.ReplaceAll(pageURL, "http", "https")
 			html, err = getPagePCHtml(pageURL)
 		}
 
