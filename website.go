@@ -2,12 +2,12 @@ package websitetool
 
 import (
 	"github.com/kevin-zx/websitetool/extract"
+	"strings"
 )
 
 func GetWebSiteByHost(host string) (*extract.Website, error) {
-	hostUrl := "http://" + host
 	ws := extract.Website{}
-	homePage, err := extract.ParserPageUrl(hostUrl, "")
+	homePage, err := extract.ParserPageUrl(host, "")
 	if err != nil {
 		return nil, err
 	}
@@ -15,7 +15,7 @@ func GetWebSiteByHost(host string) (*extract.Website, error) {
 	var allSplitText []string
 	var wholeText string
 	for u, lt := range homePage.AllLinks {
-		if u == hostUrl || u == hostUrl+"/" {
+		if strings.HasSuffix(u, host) || strings.HasSuffix(u, host+"/") {
 			continue
 		}
 		t := extract.TestPageType(u, lt, "")
@@ -46,7 +46,7 @@ func GetWebSiteByHost(host string) (*extract.Website, error) {
 	ws.Pages = append(ws.Pages, *homePage)
 	cm := extract.TakeCompanyNames(allSplitText, wholeText, homePage.Title)
 	ws.CompanyName = getTopCompany(cm)
-	ws.SiteUrl = host
+	ws.SiteUrl = homePage.PageUrl
 	return &ws, nil
 }
 
